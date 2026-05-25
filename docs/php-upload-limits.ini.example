@@ -1,0 +1,14 @@
+; Copie estos valores en su php.ini (ruta: php --ini)
+; Reinicie php artisan serve o Apache después de guardar.
+;
+; Ejemplo: archivo de 358 MB → post_max_size y upload_max_filesize deben ser >= 400M.
+; Para programas aún más pesados (1 GB+), use 2G como abajo.
+
+upload_max_filesize = 2G
+post_max_size = 2G
+max_execution_time = 3600
+max_input_time = 3600
+memory_limit = 512M
+
+; post_max_size debe ser igual o mayor que upload_max_filesize
+; En .env: REPOSITORIO_MAX_UPLOAD_KB=2097152  (2 GB en la aplicación)
