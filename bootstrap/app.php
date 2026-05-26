@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         $middleware->statefulApi();
         $middleware->alias([
             'admin.active' => EnsureAdminActive::class,

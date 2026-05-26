@@ -116,15 +116,27 @@ SANCTUM_STATEFUL_DOMAINS=192.168.61.27
 VITE_BASE_PATH=/repositorio/build/
 ```
 
-## Despliegue en Ubuntu Server
+## Despliegue en producción
+
+**Guía completa:** [docs/DESPLIEGUE-PRODUCCION.md](docs/DESPLIEGUE-PRODUCCION.md)
+
+Repositorio: [github.com/andreshur1223/aplicaciones_tic](https://github.com/andreshur1223/aplicaciones_tic)
 
 ```bash
-sudo mkdir -p /var/www/repositorio-apps
-sudo chown $USER:www-data /var/www/repositorio-apps
-# clonar repositorio en esa ruta
-chmod +x scripts/deploy-production.sh
+# Primera vez en el servidor
+git clone https://github.com/andreshur1223/aplicaciones_tic.git /var/www/repositorio-apps
+cd /var/www/repositorio-apps
+chmod +x scripts/*.sh
+./scripts/install-production.sh
+
+# Actualizaciones posteriores
 ./scripts/deploy-production.sh
+
+# Comprobar que todo está listo
+./scripts/check-production.sh
 ```
+
+Plantilla de entorno: `deploy/.env.production.example`
 
 ## Almacenamiento de instaladores
 
