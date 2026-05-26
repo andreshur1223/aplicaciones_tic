@@ -113,7 +113,7 @@ Debe mostrar todo `[OK]`. Pruebe en el navegador:
 |---------|----------|
 | Pantalla en blanco | Borrar `public/hot`; ejecutar `npm run build`; revisar `public/build/manifest.json` |
 | 404 en rutas React | Copiar `deploy/public.htaccess.production` → `public/.htaccess` |
-| 419 / CSRF en admin | `SESSION_PATH=/repositorio`, `SANCTUM_STATEFUL_DOMAINS` con la IP del servidor |
+| 419 / CSRF en admin | `SESSION_PATH=/repositorio`, `SANCTUM_STATEFUL_DOMAINS` con la IP del servidor. Tras cambios en el front: `npm run build`. No mezclar cabecera `X-CSRF-TOKEN` del HTML con la cookie Sanctum |
 | 401 en `/api/admin/*` | Tras actualizar código: `php artisan config:clear && php artisan config:cache`. Compruebe `SESSION_PATH=/repositorio`, `VITE_APP_BASE=/repositorio` y `npm run build`. Inicie sesión de nuevo en `/repositorio/admin/login` |
 | 413 al subir archivo | Subir `post_max_size` y `upload_max_filesize` en php.ini |
 | Assets sin estilo | `ASSET_URL` y `VITE_BASE_PATH=/repositorio/build/` en `.env`, luego `npm run build` |

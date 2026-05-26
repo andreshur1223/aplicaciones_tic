@@ -18,15 +18,20 @@ export const api = axios.create({
     baseURL: `${basePath}/api`,
     withCredentials: true,
     withXSRFToken: true,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         Accept: 'application/json',
     },
 });
 
-const csrfMeta = document.head.querySelector('meta[name="csrf-token"]');
-if (csrfMeta?.content) {
-    api.defaults.headers.common['X-CSRF-TOKEN'] = csrfMeta.content;
+/** Laravel valida X-CSRF-TOKEN antes que X-XSRF-TOKEN; no usar el meta de la SPA. */
+function stripStaleCsrfHeader(config) {
+    if (config.headers) {
+        delete config.headers['X-CSRF-TOKEN'];
+        delete config.headers['x-csrf-token'];
+    }
 }
 
 let csrfCookiePromise = null;
@@ -54,9 +59,11 @@ api.interceptors.request.use(async (config) => {
     const method = (config.method || 'get').toLowerCase();
     const url = config.url || '';
     const isAdmin = url.includes('/admin');
-    if (isAdmin || !['get', 'head', 'options'].includes(method)) {
+    const needsCsrf = isAdmin || !['get', 'head', 'options'].includes(method);
+    if (needsCsrf) {
         await ensureCsrfCookie();
     }
+    stripStaleCsrfHeader(config);
     return config;
 });
 
@@ -92,7 +99,10 @@ export const publicApi = {
 export const adminApi = {
     login: async (data) => {
         await ensureCsrfCookie();
-        return api.post('/admin/login', data);
+        const response = await api.post('/admin/login', data);
+        resetCsrfCookie();
+        await ensureCsrfCookie();
+        return response;
     },
     logout: () => api.post('/admin/logout'),
     me: () => api.get('/admin/me'),
