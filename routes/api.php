@@ -24,7 +24,7 @@ Route::prefix('public')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware(['auth:web', 'admin.active'])->group(function () {
+    Route::middleware(['auth:sanctum', 'admin.active'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
         Route::get('dashboard', [DashboardController::class, 'index']);

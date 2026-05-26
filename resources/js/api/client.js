@@ -34,11 +34,14 @@ let csrfCookiePromise = null;
 /** Obtiene la cookie XSRF-TOKEN de Laravel (requerida para sesión admin). */
 export function ensureCsrfCookie() {
     if (!csrfCookiePromise) {
-        csrfCookiePromise = axios.get(`${basePath}/sanctum/csrf-cookie`, {
-            withCredentials: true,
-        }).finally(() => {
-            // Permite reintentar si falló
-        });
+        csrfCookiePromise = axios
+            .get(`${basePath}/sanctum/csrf-cookie`, {
+                withCredentials: true,
+            })
+            .catch((err) => {
+                csrfCookiePromise = null;
+                throw err;
+            });
     }
     return csrfCookiePromise;
 }
@@ -46,6 +49,16 @@ export function ensureCsrfCookie() {
 export function resetCsrfCookie() {
     csrfCookiePromise = null;
 }
+
+api.interceptors.request.use(async (config) => {
+    const method = (config.method || 'get').toLowerCase();
+    const url = config.url || '';
+    const isAdmin = url.includes('/admin');
+    if (isAdmin || !['get', 'head', 'options'].includes(method)) {
+        await ensureCsrfCookie();
+    }
+    return config;
+});
 
 api.interceptors.response.use(
     (response) => response,

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\SanctumStatefulDomains;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        config(['sanctum.stateful' => SanctumStatefulDomains::resolve()]);
+
         if ($url = config('app.url')) {
             URL::forceRootUrl($url);
 

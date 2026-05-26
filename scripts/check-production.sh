@@ -40,7 +40,7 @@ php -r "echo '  post_max_size='.ini_get('post_max_size').PHP_EOL;"
 if [[ -f .env ]]; then
     echo ""
     echo "==> Variables críticas .env"
-    for key in APP_ENV APP_DEBUG APP_URL ASSET_URL SESSION_PATH VITE_APP_BASE VITE_BASE_PATH; do
+    for key in APP_ENV APP_DEBUG APP_URL ASSET_URL SESSION_PATH SANCTUM_STATEFUL_DOMAINS VITE_APP_BASE VITE_BASE_PATH; do
         if grep -q "^${key}=" .env; then
             echo "  $key=$(grep "^${key}=" .env | cut -d= -f2-)"
         else

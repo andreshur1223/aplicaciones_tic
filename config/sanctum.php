@@ -18,11 +18,16 @@ return [
     |
     */
 
+    /*
+    | Lista en .env (SANCTUM_STATEFUL_DOMAINS). El array "stateful" efectivo
+    | se calcula en AppServiceProvider (host de APP_URL + host de la petición).
+    */
+    'stateful_domains' => env('SANCTUM_STATEFUL_DOMAINS', ''),
+
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
         '%s%s',
         'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
         Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
     ))),
 
     /*
